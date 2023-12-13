@@ -1,0 +1,16 @@
+{
+  "name": "sadbhawa-backend",
+  "version": "1.0.0",
+  "description": "backend for sadbhawa theater",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "js",
+    "backend",
+    "sadbhawa"
+  ],
+  "author": "faceless",
+  "license": "ISC"
+}
