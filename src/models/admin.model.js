@@ -34,7 +34,7 @@ const adminSchema = new mongoose.Schema(
             required: true,
             enum: ['admin', 'superadmin']
         },
-        img: {
+        avatar: {
             type: String,
         }
 
