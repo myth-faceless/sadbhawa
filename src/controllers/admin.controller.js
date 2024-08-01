@@ -3,14 +3,13 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiErrors.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { USER_ICON } from "../constants/app.constants.js";
 
 const createAdmin = asyncHandler(async (req, res) => {
   try {
-    const { fullName, userName, phoneNumber, email, password } =
-      req.validateBody;
+    const { fullName, phoneNumber, email, password } = req.validateBody;
 
     const avatarLocalPath = req.file?.path;
-    console.log(avatarLocalPath);
     let avatarUrl = null;
     if (avatarLocalPath) {
       try {
@@ -22,12 +21,11 @@ const createAdmin = asyncHandler(async (req, res) => {
         ]);
       }
     } else {
-      avatarUrl = "../../public/avatar.png";
+      avatarUrl = USER_ICON;
     }
 
     const admin = new Admin({
       fullName,
-      userName,
       phoneNumber,
       email,
       password,
