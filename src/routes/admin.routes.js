@@ -14,4 +14,4 @@ router.route("/register").post(
   registerAdmin
 );
 
-export default router;
+export { router as adminRoutes };

@@ -2,9 +2,9 @@ import { Router } from "express";
 const router = Router();
 
 //routes import
-import adminRouter from "./admin.routes.js";
+import { adminRoutes } from "./admin.routes.js";
 
 //routes declaration
-router.use("/admin", adminRouter);
+router.use("/admin", adminRoutes);
 
-export default router;
+export { router as mainRoutes };

@@ -3,7 +3,6 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import { allowedOrigins } from "./constants/app.constants.js";
-// import mainRoutes from "./routes/main.routes.js";
 
 const app = express();
 
@@ -26,10 +25,9 @@ app.use("api/v1", (req, res) => {
 });
 
 //routes import
-import adminRouter from "./routes/admin.routes.js";
+import { mainRoutes } from "./routes/main.routes.js";
 
 //routes declaration
-app.use("/api/v1/admin", adminRouter);
-// app.use ("/api/v1", mainRoutes)
+app.use("/api/v1", mainRoutes);
 
 export default app;
