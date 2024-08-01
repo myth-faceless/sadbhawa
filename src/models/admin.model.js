@@ -7,7 +7,6 @@ const adminSchema = new mongoose.Schema(
     fullName: {
       type: String,
       required: true,
-      maxlength: 100,
     },
     userName: {
       type: String,
@@ -16,14 +15,11 @@ const adminSchema = new mongoose.Schema(
     phoneNumber: {
       type: String,
       required: true,
-      match: /^[0-9]{10}$/,
-      maxlength: 15,
     },
     email: {
       type: String,
       unique: true,
       required: true,
-      match: /.+\@.+\..+/,
     },
     password: {
       type: String,
