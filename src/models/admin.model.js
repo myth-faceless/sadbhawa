@@ -1,14 +1,11 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { USER_ICON } from "../constants/app.constants.js";
 
 const adminSchema = new mongoose.Schema(
   {
     fullName: {
-      type: String,
-      required: true,
-    },
-    userName: {
       type: String,
       required: true,
     },
@@ -32,6 +29,7 @@ const adminSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
+      default: USER_ICON,
     },
   },
   { timestamps: true }
