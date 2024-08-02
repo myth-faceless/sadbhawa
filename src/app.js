@@ -20,8 +20,8 @@ app.use(express.static("public"));
 app.use(morgan("dev"));
 app.use(cookieParser());
 
-app.use("api/v1", (req, res) => {
-  res.send("API V1 is running");
+app.use("/", (req, res) => {
+  res.send("Hospital API is Working Perfectly"); 
 });
 
 //routes import
