@@ -20,14 +20,14 @@ app.use(express.static("public"));
 app.use(morgan("dev"));
 app.use(cookieParser());
 
-app.use("/", (req, res) => {
-  res.send("Hospital API is Working Perfectly"); 
-});
-
 //routes import
 import { mainRoutes } from "./routes/main.routes.js";
 
 //routes declaration
 app.use("/api/v1", mainRoutes);
+
+app.use("/", (req, res) => {
+  res.send("Hospital API is Working Perfectly");
+});
 
 export default app;
