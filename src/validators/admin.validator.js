@@ -4,7 +4,7 @@ const adminSchema = Joi.object({
   fullName: Joi.string().max(100).required(),
   userName: Joi.string().alphanum().min(3).max(30).required(),
   phoneNumber: Joi.string()
-    .pattern(/^[0-9]{10}$/)
+    .pattern(/^9[0-9]{9}$/)
     .max(15)
     .required(),
   email: Joi.string()
