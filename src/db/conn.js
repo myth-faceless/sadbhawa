@@ -21,7 +21,6 @@ const connectDB = async () => {
         ? `\nPRODUCTION_Database connected to: ${connectionInstance.connection.name}`
         : `\nLOCAL_Database connected to: ${connectionInstance.connection.name}`
     );
-    // console.log(`\nDATABASE connected !! HOST: ${connectionInstance.connection.host}`)
   } catch (error) {
     console.log("DATABASE connection FAILED !", error);
     process.exit(1);
