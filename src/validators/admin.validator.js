@@ -23,12 +23,9 @@ export const loginAdminSchema = Joi.object({
 });
 
 export const updateAdminSchema = Joi.object({
-  fullName: Joi.string().max(100).required(),
+  fullName: Joi.string().max(100),
   phoneNumber: Joi.string()
     .pattern(/^9[0-9]{9}$/)
-    .max(15)
-    .required(),
-  email: Joi.string()
-    .pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
-    .required(),
+    .max(15),
+  email: Joi.string().pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
 });
