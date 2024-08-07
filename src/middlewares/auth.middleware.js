@@ -1,4 +1,7 @@
-import { ERROR_MESSAGES, STATUS_CODES } from "../constants/app.constants.js";
+import {
+  ERROR_MESSAGES,
+  STATUS_CODES,
+} from "../constants/message.constants.js";
 import { ApiError } from "../utils/ApiErrors.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { getTokenFromRequest } from "../utils/auth.js";

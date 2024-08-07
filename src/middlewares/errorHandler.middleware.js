@@ -1,7 +1,10 @@
 // src/middleware/errorHandler.js
 import { ApiError } from "../utils/ApiErrors.js";
 import ApiResponse from "../utils/ApiResponse.js";
-import { STATUS_CODES, ERROR_MESSAGES } from "../constants/app.constants.js";
+import {
+  STATUS_CODES,
+  ERROR_MESSAGES,
+} from "../constants/message.constants.js";
 
 export const notFound = (req, res, next) => {
   const error = new ApiError(
