@@ -28,6 +28,11 @@ router.route("/login").post(validate(loginAdminSchema), loginAdmin);
 router.route("/logout").post(verifyJWT, logoutAdmin);
 router
   .route("/:adminId")
-  .put(verifyJWT, validate(updateAdminSchema), updateAdmin);
+  .put(
+    verifyJWT,
+    upload.single("avatar"),
+    validate(updateAdminSchema),
+    updateAdmin
+  );
 
 export { router as adminRoutes };
