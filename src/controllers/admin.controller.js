@@ -145,7 +145,6 @@ const updateAdmin = asyncHandler(async (req, res, next) => {
   try {
     const { fullName, phoneNumber, email } = req.validateBody;
     const { adminId } = req.params;
-    console.log(adminId);
 
     // Check if the admin exists
     const admin = await Admin.findById(adminId);
@@ -156,7 +155,7 @@ const updateAdmin = asyncHandler(async (req, res, next) => {
     }
 
     // Check for email uniqueness if email is being updated
-    if (email && email !== admin.email) {
+    if (email && email == admin.email) {
       const existedAdmin = await Admin.findOne({ email });
       if (existedAdmin) {
         return res
