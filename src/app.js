@@ -3,6 +3,10 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import { allowedOrigins } from "./constants/app.constants.js";
+import {
+  errorHandler,
+  notFound,
+} from "./middlewares/errorHandler.middleware.js";
 
 const app = express();
 
@@ -26,8 +30,7 @@ import { mainRoutes } from "./routes/main.routes.js";
 //routes declaration
 app.use("/api/v1", mainRoutes);
 
-app.use("/", (req, res) => {
-  res.send("Hospital API is Working Perfectly");
-});
+app.use(notFound);
+app.use(errorHandler);
 
 export default app;
