@@ -1,4 +1,3 @@
-// src/middleware/errorHandler.js
 import { ApiError } from "../utils/ApiErrors.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import {
@@ -24,7 +23,7 @@ export const errorHandler = (err, req, res, next) => {
       ? err.message
       : ERROR_MESSAGES.INTERNAL_SERVER_ERROR;
 
-  const response = new ApiResponse(message, statusCode, false);
+  const response = new ApiResponse(statusCode, message, false);
 
   res.status(statusCode).json(response);
 };
