@@ -31,7 +31,7 @@ export const ERROR_MESSAGES = {
   REQUIRED_EMAIL_PASSWORD: "Email and Password is Required",
   USER_NOT_FOUND: "User not found.",
   USER_NOT_FOUND_INVALID_TOKEN: "User not found or invalid token.",
-  OLD_PASSWORD: "Old Password doesn't match.",
+  INVALID_OLD_PASSWORD: "Old Password doesn't match or invalid.",
   INVALID_TOKEN: "Invalid Token.",
   SAME_PASSWORD: "New password cannot be the same as old password.",
   CLOUDINARY_UPLOAD_FAILED: "Failed to upload to cloudinary",
@@ -45,4 +45,5 @@ export const SUCCESS_MESSAGES = {
   ADMIN_REGISTERED: "Admin registered successfully.",
   ADMIN_LOGGED_IN: "Admin logged in successfully.",
   ADMIN_LOGGED_OUT: "Admin logged out successfully.",
+  PASSWORD_CHANGED: "Password changed successfully.",
 };
