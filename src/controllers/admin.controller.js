@@ -8,7 +8,7 @@ import {
   STATUS_CODES,
   ERROR_MESSAGES,
   SUCCESS_MESSAGES,
-} from "../constants/app.constants.js";
+} from "../constants/message.constants.js";
 
 const generateToken = async (adminId) => {
   try {
@@ -154,7 +154,6 @@ const updateAdmin = asyncHandler(async (req, res, next) => {
       );
     }
 
-    // Check for email uniqueness if email is being updated
     if (email && email == admin.email) {
       const existedAdmin = await Admin.findOne({ email });
       if (existedAdmin) {
@@ -181,7 +180,6 @@ const updateAdmin = asyncHandler(async (req, res, next) => {
       }
     }
 
-    // Update the admin details
     admin.fullName = fullName || admin.fullName;
     admin.phoneNumber = phoneNumber || admin.phoneNumber;
     admin.email = email || admin.email;
@@ -205,4 +203,36 @@ const updateAdmin = asyncHandler(async (req, res, next) => {
   }
 });
 
-export { createAdmin, loginAdmin, logoutAdmin, updateAdmin };
+const changeAdminPassword = asyncHandler(async (req, res, next) => {
+  const { oldPassword, newPassword } = req.validateBody;
+
+  const admin = await Admin.findById(req.admin?.id);
+  if (!admin) {
+    throw new ApiError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.USER_NOT_FOUND);
+  }
+  const isPasswordCorrect = await admin.isPasswordCorrect(oldPassword);
+
+  if (!isPasswordCorrect) {
+    throw new ApiError(
+      STATUS_CODES.BAD_REQUEST,
+      ERROR_MESSAGES.INVALID_OLD_PASSWORD
+    );
+  }
+
+  admin.password = newPassword;
+  await admin.save();
+
+  return res
+    .status(STATUS_CODES.SUCCESS)
+    .json(
+      new ApiResponse(STATUS_CODES.SUCCESS, SUCCESS_MESSAGES.PASSWORD_CHANGED)
+    );
+});
+
+export {
+  createAdmin,
+  loginAdmin,
+  logoutAdmin,
+  updateAdmin,
+  changeAdminPassword,
+};
