@@ -18,7 +18,7 @@ const router = Router();
 
 //public routes
 router.route("/").get(getAllDoctors);
-router.route("/doctors/:doctorId").get(getDoctorById);
+router.route("/:doctorId").get(getDoctorById);
 
 //protected routes
 router
