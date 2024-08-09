@@ -1,7 +1,7 @@
 import { Admin } from "../models/admin.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiErrors.js";
-import ApiResponse from "../utils/ApiResponse.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { USER_ICON } from "../constants/app.constants.js";
 import {
@@ -68,8 +68,8 @@ const createAdmin = asyncHandler(async (req, res, next) => {
 
     const response = new ApiResponse(
       STATUS_CODES.CREATED,
-      admin,
-      SUCCESS_MESSAGES.ADMIN_REGISTERED
+      SUCCESS_MESSAGES.ADMIN_REGISTERED,
+      admin
     );
     res.status(201).json(response);
   } catch (err) {
