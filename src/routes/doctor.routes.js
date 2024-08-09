@@ -17,7 +17,7 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 //public routes
-router.route("/doctors").get(getAllDoctors);
+router.route("/").get(getAllDoctors);
 router.route("/doctors/:doctorId").get(getDoctorById);
 
 //protected routes
