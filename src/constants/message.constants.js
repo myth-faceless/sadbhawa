@@ -29,21 +29,38 @@ export const ERROR_MESSAGES = {
   INVALID_EMAIL_PASSWORD: "Invalid Email, Phone or password.",
   INCORRECT_EMAIL_PASSWORD: "Incorrect Email or password.",
   REQUIRED_EMAIL_PASSWORD: "Email and Password is Required",
+
   USER_NOT_FOUND: "User not found.",
   USER_NOT_FOUND_INVALID_TOKEN: "User not found or invalid token.",
   INVALID_OLD_PASSWORD: "Old Password doesn't match or invalid.",
   INVALID_TOKEN: "Invalid Token.",
   SAME_PASSWORD: "New password cannot be the same as old password.",
+
   CLOUDINARY_UPLOAD_FAILED: "Failed to upload to cloudinary",
   CLOUDINARY_AVATAR_UPLOAD_FAILED: "Failed to upload avatar to cloudinary",
+
   TOKEN_GENEREATION: "Something went wrong while generating access token",
+
+  DOCTOR_NOT_FOUND: "Dotor not found.",
+  ERROR_CREATING_DOCTOR: "Error creating doctor.",
+  ERROR_FETCHING_DOCTOR: "Error fetching doctor.",
+  ERROR_UPDATING_DOCTOR: "Error updating doctor.",
+  ERROR_DELETING_DOCTOR: "Error deleting doctor.",
 };
 
 export const SUCCESS_MESSAGES = {
   USER_REGISTERED: "User registered successfully.",
   USER_LOGGED_IN: "User logged in successfully.",
+
   ADMIN_REGISTERED: "Admin registered successfully.",
   ADMIN_LOGGED_IN: "Admin logged in successfully.",
   ADMIN_LOGGED_OUT: "Admin logged out successfully.",
+  ADMIN_UPDATED: "Admin updated successfully.",
+
   PASSWORD_CHANGED: "Password changed successfully.",
+
+  DOCTOR_CREATED: "Doctor created successfully.",
+  DOCTOR_FETCHED: "Doctor fetched successfully.",
+  DOCTOR_UPDATED: "Doctor updated successfully.",
+  DOCTOR_DELETED: "Doctor deleted successfully.",
 };
