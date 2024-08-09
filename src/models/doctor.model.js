@@ -53,7 +53,7 @@ const doctorSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    contact: {
+    phoneNumber: {
       type: String,
       required: true,
       unique: true,
