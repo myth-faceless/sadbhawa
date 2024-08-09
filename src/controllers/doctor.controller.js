@@ -107,6 +107,7 @@ const getAllDoctors = asyncHandler(async (req, res, next) => {
 
 const getDoctorById = asyncHandler(async (req, res, next) => {
   const { doctorId } = req.params;
+  console.log(doctorId);
   try {
     const doctor = await Doctor.findById(doctorId);
 
@@ -212,7 +213,7 @@ const deleteDoctor = asyncHandler(async (req, res, next) => {
       );
     }
 
-    await doctor.remove();
+    await doctor.deleteOne();
 
     const response = new ApiResponse(
       STATUS_CODES.SUCCESS,
