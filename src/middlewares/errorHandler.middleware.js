@@ -1,5 +1,5 @@
 import { ApiError } from "../utils/ApiErrors.js";
-import ApiResponse from "../utils/ApiResponse.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import {
   STATUS_CODES,
   ERROR_MESSAGES,
@@ -27,5 +27,3 @@ export const errorHandler = (err, req, res, next) => {
 
   res.status(statusCode).json(response);
 };
-
-export default errorHandler;
