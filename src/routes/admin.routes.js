@@ -14,7 +14,7 @@ import {
   updateAdminSchema,
   changeAdminPasswordSchema,
 } from "../validators/admin.validator.js";
-import verifyJWT from "../middlewares/auth.middleware.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
