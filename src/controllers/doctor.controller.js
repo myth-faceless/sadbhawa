@@ -134,7 +134,7 @@ const getDoctorById = asyncHandler(async (req, res, next) => {
 });
 
 const updateDoctor = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
+  const { doctorId } = req.params;
 
   const {
     name,
@@ -149,7 +149,7 @@ const updateDoctor = asyncHandler(async (req, res, next) => {
   } = req.validateBody;
 
   try {
-    const doctor = await Doctor.findById(id);
+    const doctor = await Doctor.findById(doctorId);
     if (!doctor) {
       return next(
         new ApiError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.DOCTOR_NOT_FOUND)

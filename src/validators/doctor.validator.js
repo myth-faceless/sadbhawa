@@ -41,19 +41,17 @@ export const updateDoctorSchema = Joi.object({
   specialization: Joi.string(),
   description: Joi.string(),
   qualification: Joi.array().items(qualificationSchema),
-  availableDays: Joi.array()
-    .items(
-      Joi.string().valid(
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday"
-      )
+  availableDays: Joi.array().items(
+    Joi.string().valid(
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
     )
-    .required(),
+  ),
   dateOfBirth: Joi.date(),
   phoneNumber: Joi.string()
     .pattern(/^9[0-9]{9}$/)
