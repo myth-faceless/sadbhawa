@@ -1,8 +1,8 @@
 import Joi from "joi";
 
-export const registerAdminSchema = Joi.object({
+export const registerUserSchema = Joi.object({
   fullName: Joi.string().max(100).required(),
-  phoneNumber: Joi.string()
+  contactNo: Joi.string()
     .pattern(/^9[0-9]{9}$/)
     .max(15)
     .required(),
@@ -15,22 +15,22 @@ export const registerAdminSchema = Joi.object({
   avatar: Joi.any(),
 });
 
-export const loginAdminSchema = Joi.object({
+export const loginUserSchema = Joi.object({
   email: Joi.string()
     .pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
     .required(),
   password: Joi.string().required(),
 });
 
-export const updateAdminSchema = Joi.object({
+export const updateUserSchema = Joi.object({
   fullName: Joi.string().max(100),
-  phoneNumber: Joi.string()
+  contactNo: Joi.string()
     .pattern(/^9[0-9]{9}$/)
     .max(15),
   email: Joi.string().pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
 });
 
-export const changeAdminPasswordSchema = Joi.object({
+export const changeUserPasswordSchema = Joi.object({
   oldPassword: Joi.string()
     .pattern(/^[a-zA-Z0-9]{3,30}$/)
     .required(),

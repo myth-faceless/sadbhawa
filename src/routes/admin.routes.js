@@ -1,41 +1,47 @@
 import { Router } from "express";
 import {
-  createAdmin,
-  loginAdmin,
-  logoutAdmin,
-  updateAdmin,
-  changeAdminPassword,
+  loginUser,
+  logoutUser,
+  getAllUser,
+  getUserById,
+  updateUser,
+  changeUserPassword,
 } from "../controllers/admin.controller.js";
 import { upload } from "../middlewares/multter.middleware.js";
 import { validate } from "../middlewares/validate.middleware.js";
 import {
-  registerAdminSchema,
-  loginAdminSchema,
-  updateAdminSchema,
-  changeAdminPasswordSchema,
-} from "../validators/admin.validator.js";
-import { verifyJWT } from "../middlewares/auth.middleware.js";
+  loginUserSchema,
+  updateUserSchema,
+  changeUserPasswordSchema,
+} from "../validators/user.validator.js";
+import { authenticate, isAdmin } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
 //public routes
-router
-  .route("/register")
-  .post(upload.single("avatar"), validate(registerAdminSchema), createAdmin);
-router.route("/login").post(validate(loginAdminSchema), loginAdmin);
 
-//protected routes
-router.route("/logout").post(verifyJWT, logoutAdmin);
+router.route("/login").post(validate(loginUserSchema), loginUser);
+router.route("/logout").post(authenticate, logoutUser);
+
+//protected admin routes
+router.route("/users").get(authenticate, isAdmin, getAllUser);
+router.route("/users/:id").get(authenticate, isAdmin, getUserById);
 router
-  .route("/:adminId")
+  .route("/users/:id")
   .put(
-    verifyJWT,
+    authenticate,
+    isAdmin,
     upload.single("avatar"),
-    validate(updateAdminSchema),
-    updateAdmin
+    validate(updateUserSchema),
+    updateUser
   );
 router
   .route("/changepassword")
-  .post(verifyJWT, validate(changeAdminPasswordSchema), changeAdminPassword);
+  .post(
+    authenticate,
+    isAdmin,
+    validate(changeUserPasswordSchema),
+    changeUserPassword
+  );
 
 export { router as adminRoutes };

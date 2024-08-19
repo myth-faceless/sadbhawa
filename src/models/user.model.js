@@ -3,14 +3,15 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { USER_ICON } from "../constants/app.constants.js";
 
-const adminSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
       required: true,
     },
-    phoneNumber: {
+    contactNo: {
       type: String,
+      unique: true,
       required: true,
     },
     email: {
@@ -24,28 +25,28 @@ const adminSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      required: true,
-      default: "admin",
+      enum: ["user", "admin"],
+      default: "user",
     },
     avatar: {
       type: String,
-      default: USER_ICON,
+      required: false,
     },
   },
   { timestamps: true }
 );
 
-adminSchema.pre("save", async function (next) {
+userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
-adminSchema.methods.isPasswordCorrect = async function (password) {
-  return await bcrypt.compare(password, this.password);
+userSchema.methods.isPasswordCorrect = async function (candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
 };
 
-adminSchema.methods.generateAccessToken = function () {
+userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
       _id: this._id,
@@ -59,4 +60,4 @@ adminSchema.methods.generateAccessToken = function () {
   );
 };
 
-export const Admin = mongoose.model("Admin", adminSchema);
+export const User = mongoose.model("User", userSchema);

@@ -18,13 +18,15 @@ export const STATUS_CODES = {
 export const ERROR_MESSAGES = {
   INTERNAL_SERVER_ERROR: "Internal Server Error.",
   UNAUTHORIZED: "Access denied. Please login to continue.",
-  FORBIDDEN: "You don't have enough permission to perform this action.",
+  FORBIDDEN: "Access denied. Admin only.",
+
   USER_EMAIL_ALREADY_EXIST:
     "User with this email already exist. Please try with other email.",
   USER_PHONE_ALREADY_EXIST:
     "User with this phone already exist. Please try with other phone.",
   ERROR_CREATING_USER: "Error Registering User.",
-  ERROR_CREATING_ADMIN: "Error Registering Admin.",
+  ERROR_UPDATING_USER: "Error Updating User.",
+  ERROR_FETCHING_USER: "Error Fetching User.",
 
   INVALID_EMAIL_PASSWORD: "Invalid Email, Phone or password.",
   INCORRECT_EMAIL_PASSWORD: "Incorrect Email or password.",
@@ -34,33 +36,26 @@ export const ERROR_MESSAGES = {
   USER_NOT_FOUND_INVALID_TOKEN: "User not found or invalid token.",
   INVALID_OLD_PASSWORD: "Old Password doesn't match or invalid.",
   INVALID_TOKEN: "Invalid Token.",
+
   SAME_PASSWORD: "New password cannot be the same as old password.",
 
   CLOUDINARY_UPLOAD_FAILED: "Failed to upload to cloudinary",
   CLOUDINARY_AVATAR_UPLOAD_FAILED: "Failed to upload avatar to cloudinary",
 
   TOKEN_GENEREATION: "Something went wrong while generating access token",
-
-  DOCTOR_NOT_FOUND: "Dotor not found.",
-  ERROR_CREATING_DOCTOR: "Error creating doctor.",
-  ERROR_FETCHING_DOCTOR: "Error fetching doctor.",
-  ERROR_UPDATING_DOCTOR: "Error updating doctor.",
-  ERROR_DELETING_DOCTOR: "Error deleting doctor.",
 };
 
 export const SUCCESS_MESSAGES = {
   USER_REGISTERED: "User registered successfully.",
   USER_LOGGED_IN: "User logged in successfully.",
+  USER_LOGGED_OUT: "User logged out successfully.",
+  USER_UPDATED: "User updated successfully.",
 
-  ADMIN_REGISTERED: "Admin registered successfully.",
+  USER_FETCHED: "User fetched successfully",
+
   ADMIN_LOGGED_IN: "Admin logged in successfully.",
   ADMIN_LOGGED_OUT: "Admin logged out successfully.",
   ADMIN_UPDATED: "Admin updated successfully.",
 
   PASSWORD_CHANGED: "Password changed successfully.",
-
-  DOCTOR_CREATED: "Doctor created successfully.",
-  DOCTOR_FETCHED: "Doctor fetched successfully.",
-  DOCTOR_UPDATED: "Doctor updated successfully.",
-  DOCTOR_DELETED: "Doctor deleted successfully.",
 };

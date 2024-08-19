@@ -1,4 +1,4 @@
-import { Admin } from "../models/admin.model.js";
+import { User } from "../models/user.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiErrors.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -10,16 +10,13 @@ import {
   SUCCESS_MESSAGES,
 } from "../constants/message.constants.js";
 
-const generateToken = async (adminId) => {
+const generateToken = async (id) => {
   try {
-    const admin = await Admin.findById(adminId);
-    if (!admin) {
-      throw new ApiError(
-        STATUS_CODES.NOT_FOUND,
-        ERROR_MESSAGES.ADMIN_NOT_FOUND
-      );
+    const user = await User.findById(id);
+    if (!user) {
+      throw new ApiError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.USER_NOT_FOUND);
     }
-    const accessToken = admin.generateAccessToken();
+    const accessToken = user.generateAccessToken();
     return { accessToken };
   } catch (error) {
     throw new ApiError(
@@ -29,16 +26,19 @@ const generateToken = async (adminId) => {
   }
 };
 
-const createAdmin = asyncHandler(async (req, res, next) => {
+export const createUser = asyncHandler(async (req, res, next) => {
   try {
-    const { fullName, phoneNumber, email, password } = req.validateBody;
+    const { fullName, contactNo, email, password } = req.validateBody;
 
-    const existedAdmin = await Admin.findOne({ email });
+    const existingUser = await User.findOne({ email });
 
-    if (existedAdmin) {
-      return res
-        .status(STATUS_CODES.DUPLICATE_ENTRY)
-        .json(ApiResponse.error(ERROR_MESSAGES.USER_EMAIL_ALREADY_EXIST));
+    if (existingUser) {
+      return next(
+        new ApiError(
+          STATUS_CODES.DUPLICATE_ENTRY,
+          ERROR_MESSAGES.USER_EMAIL_ALREADY_EXIST
+        )
+      );
     }
 
     const avatarLocalPath = req.file?.path;
@@ -58,9 +58,9 @@ const createAdmin = asyncHandler(async (req, res, next) => {
       avatarUrl = USER_ICON;
     }
 
-    const admin = await Admin.create({
+    const user = await User.create({
       fullName,
-      phoneNumber,
+      contactNo,
       email,
       password,
       avatar: avatarUrl,
@@ -68,21 +68,75 @@ const createAdmin = asyncHandler(async (req, res, next) => {
 
     const response = new ApiResponse(
       STATUS_CODES.CREATED,
-      SUCCESS_MESSAGES.ADMIN_REGISTERED,
-      admin
+      SUCCESS_MESSAGES.USER_REGISTERED,
+      user
     );
-    res.status(201).json(response);
-  } catch (err) {
-    const error = new ApiError(
-      STATUS_CODES.INTERNAL_SERVER_ERROR,
-      ERROR_MESSAGES.ERROR_CREATING_ADMIN,
-      err.stack
+    res.status(STATUS_CODES.CREATED).json(response);
+  } catch (error) {
+    next(
+      new ApiError(
+        STATUS_CODES.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
+        error.stack
+      )
     );
-    res.status(500).json(error);
   }
 });
 
-const loginAdmin = asyncHandler(async (req, res, next) => {
+export const getAllUser = asyncHandler(async (req, res, next) => {
+  try {
+    const user = await User.find({}).select("-password");
+    if (!user) {
+      return next(
+        new ApiError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.USER_NOT_FOUND)
+      );
+    }
+    const response = new ApiResponse(
+      STATUS_CODES.SUCCESS,
+      SUCCESS_MESSAGES.USER_FETCHED,
+      user
+    );
+    res.status(STATUS_CODES.SUCCESS).json(response);
+  } catch (error) {
+    next(
+      new ApiError(
+        STATUS_CODES.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
+        error.stack
+      )
+    );
+  }
+});
+
+export const getUserById = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  console.log(id);
+  try {
+    const user = await User.findById(id);
+
+    if (!user) {
+      return next(
+        new ApiError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.USER_NOT_FOUND)
+      );
+    }
+    const response = new ApiResponse(
+      STATUS_CODES.SUCCESS,
+      SUCCESS_MESSAGES.USER_FETCHED,
+      user
+    );
+    res.status(STATUS_CODES.SUCCESS).json(response);
+  } catch (error) {
+    next(
+      new ApiError(
+        STATUS_CODES.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGES.ERROR_FETCHING_USER,
+        error.stack
+      )
+    );
+  }
+});
+
+export const loginUser = asyncHandler(async (req, res, next) => {
   const { email, password } = req.validateBody;
 
   if (!email && !password) {
@@ -92,13 +146,13 @@ const loginAdmin = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const admin = await Admin.findOne({ email });
+  const user = await User.findOne({ email });
 
-  if (!admin) {
+  if (!user) {
     throw new ApiError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.USER_NOT_FOUND);
   }
 
-  const isPasswordValid = await admin.isPasswordCorrect(password);
+  const isPasswordValid = await user.isPasswordCorrect(password);
 
   if (!isPasswordValid) {
     throw new ApiError(
@@ -107,9 +161,9 @@ const loginAdmin = asyncHandler(async (req, res, next) => {
     );
   }
 
-  const accessToken = await generateToken(admin._id);
+  const accessToken = await generateToken(user._id);
 
-  const loggedInAdmin = await Admin.findById(admin._id).select("-password");
+  const loggedInUser = await User.findById(user._id).select("-password");
 
   const options = {
     httpOnly: true,
@@ -122,13 +176,13 @@ const loginAdmin = asyncHandler(async (req, res, next) => {
     .json(
       new ApiResponse(
         STATUS_CODES.SUCCESS,
-        { admin: loggedInAdmin, accessToken },
-        SUCCESS_MESSAGES.ADMIN_LOGGED_IN
+        { user: loggedInUser, accessToken },
+        SUCCESS_MESSAGES.USER_LOGGED_IN
       )
     );
 });
 
-const logoutAdmin = asyncHandler(async (req, res) => {
+export const logoutUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
@@ -137,26 +191,25 @@ const logoutAdmin = asyncHandler(async (req, res) => {
     .status(STATUS_CODES.SUCCESS)
     .clearCookie("accessToken", options)
     .json(
-      new ApiResponse(STATUS_CODES.SUCCESS, SUCCESS_MESSAGES.ADMIN_LOGGED_OUT)
+      new ApiResponse(STATUS_CODES.SUCCESS, SUCCESS_MESSAGES.USER_LOGGED_OUT)
     );
 });
 
-const updateAdmin = asyncHandler(async (req, res, next) => {
+export const updateUser = asyncHandler(async (req, res, next) => {
   try {
-    const { fullName, phoneNumber, email } = req.validateBody;
-    const { adminId } = req.params;
+    const { fullName, contactNo, email } = req.validateBody;
+    const { id } = req.params;
 
-    // Check if the admin exists
-    const admin = await Admin.findById(adminId);
-    if (!admin) {
+    const user = await User.findById(id);
+    if (!user) {
       return next(
-        new ApiError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.ADMIN_NOT_FOUND)
+        new ApiError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.USER_NOT_FOUND)
       );
     }
 
-    if (email && email == admin.email) {
-      const existedAdmin = await Admin.findOne({ email });
-      if (existedAdmin) {
+    if (email && email == user.email) {
+      const existedUser = await User.findOne({ email });
+      if (existedUser) {
         return res
           .status(STATUS_CODES.DUPLICATE_ENTRY)
           .json(ApiResponse.error(ERROR_MESSAGES.USER_EMAIL_ALREADY_EXIST));
@@ -165,7 +218,7 @@ const updateAdmin = asyncHandler(async (req, res, next) => {
 
     // Handle avatar update if a new file is uploaded
     const avatarLocalPath = req.file?.path;
-    let avatarUrl = admin.avatar;
+    let avatarUrl = user.avatar;
 
     if (avatarLocalPath) {
       try {
@@ -180,37 +233,37 @@ const updateAdmin = asyncHandler(async (req, res, next) => {
       }
     }
 
-    admin.fullName = fullName || admin.fullName;
-    admin.phoneNumber = phoneNumber || admin.phoneNumber;
-    admin.email = email || admin.email;
-    admin.avatar = avatarUrl;
+    user.fullName = fullName || user.fullName;
+    user.contactNo = contactNo || user.contactNo;
+    user.email = email || user.email;
+    user.avatar = avatarUrl;
 
-    await admin.save();
+    await user.save();
 
     const response = new ApiResponse(
       STATUS_CODES.SUCCESS,
-      admin,
-      SUCCESS_MESSAGES.ADMIN_UPDATED
+      user,
+      SUCCESS_MESSAGES.USER_UPDATED
     );
     res.status(200).json(response);
   } catch (err) {
     const error = new ApiError(
       STATUS_CODES.INTERNAL_SERVER_ERROR,
-      ERROR_MESSAGES.ERROR_UPDATING_ADMIN,
+      ERROR_MESSAGES.ERROR_UPDATING_USER,
       err.stack
     );
     res.status(500).json(error);
   }
 });
 
-const changeAdminPassword = asyncHandler(async (req, res, next) => {
+export const changeUserPassword = asyncHandler(async (req, res, next) => {
   const { oldPassword, newPassword } = req.validateBody;
 
-  const admin = await Admin.findById(req.admin?.id);
-  if (!admin) {
+  const user = await User.findById(req.user?.id);
+  if (!user) {
     throw new ApiError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.USER_NOT_FOUND);
   }
-  const isPasswordCorrect = await admin.isPasswordCorrect(oldPassword);
+  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
 
   if (!isPasswordCorrect) {
     throw new ApiError(
@@ -219,8 +272,8 @@ const changeAdminPassword = asyncHandler(async (req, res, next) => {
     );
   }
 
-  admin.password = newPassword;
-  await admin.save();
+  user.password = newPassword;
+  await user.save();
 
   return res
     .status(STATUS_CODES.SUCCESS)
@@ -228,11 +281,3 @@ const changeAdminPassword = asyncHandler(async (req, res, next) => {
       new ApiResponse(STATUS_CODES.SUCCESS, SUCCESS_MESSAGES.PASSWORD_CHANGED)
     );
 });
-
-export {
-  createAdmin,
-  loginAdmin,
-  logoutAdmin,
-  updateAdmin,
-  changeAdminPassword,
-};
