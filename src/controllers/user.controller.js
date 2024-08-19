@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiErrors.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { USER_ICON } from "../constants/app.constants.js";
 import {
   STATUS_CODES,
   ERROR_MESSAGES,
@@ -39,13 +40,23 @@ export const registerUser = asyncHandler(async (req, res, next) => {
       );
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUserByEmail = await User.findOne({ email });
+    const existingUserByContactNo = await User.findOne({ contactNo });
 
-    if (existingUser) {
+    if (existingUserByEmail) {
       return next(
         new ApiError(
           STATUS_CODES.DUPLICATE_ENTRY,
           ERROR_MESSAGES.USER_EMAIL_ALREADY_EXIST
+        )
+      );
+    }
+
+    if (existingUserByContactNo) {
+      return next(
+        new ApiError(
+          STATUS_CODES.DUPLICATE_ENTRY,
+          ERROR_MESSAGES.USER_PHONE_ALREADY_EXIST
         )
       );
     }
@@ -172,7 +183,7 @@ export const updatePassword = asyncHandler(async (req, res, next) => {
       );
     }
 
-    const isPasswordCorrect = await user.isPasswordCorrect(currentPassword);
+    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
 
     if (!isPasswordCorrect) {
       return next(
