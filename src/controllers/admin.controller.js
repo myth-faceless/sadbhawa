@@ -28,7 +28,17 @@ const generateToken = async (id) => {
 
 export const createUser = asyncHandler(async (req, res, next) => {
   try {
-    const { fullName, contactNo, email, password } = req.validateBody;
+    const { fullName, contactNo, email, password, confirmPassword } =
+      req.validateBody;
+
+    if (password !== confirmPassword) {
+      return next(
+        new ApiError(
+          STATUS_CODES.BAD_REQUEST,
+          ERROR_MESSAGES.PASSWORDS_DO_NOT_MATCH
+        )
+      );
+    }
 
     const existingUser = await User.findOne({ email });
 
@@ -139,25 +149,31 @@ export const getUserById = asyncHandler(async (req, res, next) => {
 export const loginUser = asyncHandler(async (req, res, next) => {
   const { email, password } = req.validateBody;
 
-  if (!email && !password) {
-    throw new ApiError(
-      STATUS_CODES.BAD_REQUEST,
-      ERROR_MESSAGES.REQUIRED_EMAIL_PASSWORD
+  if (!email || !password) {
+    return next(
+      new ApiError(
+        STATUS_CODES.BAD_REQUEST,
+        ERROR_MESSAGES.REQUIRED_EMAIL_PASSWORD
+      )
     );
   }
 
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new ApiError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.USER_NOT_FOUND);
+    return next(
+      ApiError(STATUS_CODES.NOT_FOUND, ERROR_MESSAGES.USER_NOT_FOUND)
+    );
   }
 
   const isPasswordValid = await user.isPasswordCorrect(password);
 
   if (!isPasswordValid) {
-    throw new ApiError(
-      STATUS_CODES.UNAUTHORIZED,
-      ERROR_MESSAGES.INCORRECT_EMAIL_PASSWORD
+    return next(
+      new ApiError(
+        STATUS_CODES.UNAUTHORIZED,
+        ERROR_MESSAGES.INCORRECT_EMAIL_PASSWORD
+      )
     );
   }
 
@@ -183,16 +199,26 @@ export const loginUser = asyncHandler(async (req, res, next) => {
 });
 
 export const logoutUser = asyncHandler(async (req, res) => {
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
-  return res
-    .status(STATUS_CODES.SUCCESS)
-    .clearCookie("accessToken", options)
-    .json(
-      new ApiResponse(STATUS_CODES.SUCCESS, SUCCESS_MESSAGES.USER_LOGGED_OUT)
+  try {
+    const options = {
+      httpOnly: true,
+      secure: true,
+    };
+    return res
+      .status(STATUS_CODES.SUCCESS)
+      .clearCookie("accessToken", options)
+      .json(
+        new ApiResponse(STATUS_CODES.SUCCESS, SUCCESS_MESSAGES.USER_LOGGED_OUT)
+      );
+  } catch (error) {
+    return next(
+      new ApiError(
+        STATUS_CODES.INTERNAL_SERVER_ERROR,
+        ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
+        error.stack
+      )
     );
+  }
 });
 
 export const updateUser = asyncHandler(async (req, res, next) => {
@@ -207,12 +233,15 @@ export const updateUser = asyncHandler(async (req, res, next) => {
       );
     }
 
-    if (email && email == user.email) {
-      const existedUser = await User.findOne({ email });
-      if (existedUser) {
-        return res
-          .status(STATUS_CODES.DUPLICATE_ENTRY)
-          .json(ApiResponse.error(ERROR_MESSAGES.USER_EMAIL_ALREADY_EXIST));
+    if (email && email !== user.email) {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return next(
+          new ApiError(
+            STATUS_CODES.DUPLICATE_ENTRY,
+            ERROR_MESSAGES.USER_EMAIL_ALREADY_EXIST
+          )
+        );
       }
     }
 
@@ -256,7 +285,7 @@ export const updateUser = asyncHandler(async (req, res, next) => {
   }
 });
 
-export const changeUserPassword = asyncHandler(async (req, res, next) => {
+export const updateUserPassword = asyncHandler(async (req, res, next) => {
   const { oldPassword, newPassword } = req.validateBody;
 
   const user = await User.findById(req.user?.id);
@@ -278,6 +307,6 @@ export const changeUserPassword = asyncHandler(async (req, res, next) => {
   return res
     .status(STATUS_CODES.SUCCESS)
     .json(
-      new ApiResponse(STATUS_CODES.SUCCESS, SUCCESS_MESSAGES.PASSWORD_CHANGED)
+      new ApiResponse(STATUS_CODES.SUCCESS, SUCCESS_MESSAGES.PASSWORD_UPDATED)
     );
 });
