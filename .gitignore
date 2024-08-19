@@ -6,8 +6,8 @@ yarn-error.log
 # Compiled output
 dist/
 
-# Environment variables
-# .env
+#Environment variables
+.env
 
 # Editor and IDE files
 .vscode/
