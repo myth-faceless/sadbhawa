@@ -12,6 +12,9 @@ export const registerUserSchema = Joi.object({
   password: Joi.string()
     .pattern(/^[a-zA-Z0-9]{3,30}$/)
     .required(),
+  confirmPassword: Joi.string()
+    .pattern(/^[a-zA-Z0-9]{3,30}$/)
+    .required(),
   avatar: Joi.any(),
 });
 
@@ -30,11 +33,14 @@ export const updateUserSchema = Joi.object({
   email: Joi.string().pattern(/^[^\s@]+@[^\s@]+\.[^\s@]+$/),
 });
 
-export const changeUserPasswordSchema = Joi.object({
+export const updateUserPasswordSchema = Joi.object({
   oldPassword: Joi.string()
     .pattern(/^[a-zA-Z0-9]{3,30}$/)
     .required(),
   newPassword: Joi.string()
+    .pattern(/^[a-zA-Z0-9]{3,30}$/)
+    .required(),
+  confirmNewPassword: Joi.string()
     .pattern(/^[a-zA-Z0-9]{3,30}$/)
     .required(),
 });
