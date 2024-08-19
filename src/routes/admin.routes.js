@@ -5,14 +5,14 @@ import {
   getAllUser,
   getUserById,
   updateUser,
-  changeUserPassword,
+  updateUserPassword,
 } from "../controllers/admin.controller.js";
 import { upload } from "../middlewares/multter.middleware.js";
 import { validate } from "../middlewares/validate.middleware.js";
 import {
   loginUserSchema,
   updateUserSchema,
-  changeUserPasswordSchema,
+  updateUserPasswordSchema,
 } from "../validators/user.validator.js";
 import { authenticate, isAdmin } from "../middlewares/auth.middleware.js";
 
@@ -36,12 +36,12 @@ router
     updateUser
   );
 router
-  .route("/changepassword")
+  .route("/update-password")
   .post(
     authenticate,
     isAdmin,
-    validate(changeUserPasswordSchema),
-    changeUserPassword
+    validate(updateUserPasswordSchema),
+    updateUserPassword
   );
 
 export { router as adminRoutes };
