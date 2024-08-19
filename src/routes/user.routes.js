@@ -9,9 +9,9 @@ import {
 import { upload } from "../middlewares/multter.middleware.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
 import {
+  registerUser,
   loginUser,
   logoutUser,
-  registerUser,
   updatePassword,
   updateSelf,
 } from "../controllers/user.controller.js";
@@ -35,7 +35,7 @@ router
     updateSelf
   );
 router
-  .route("update-password")
+  .route("/update-password")
   .put(authenticate, validate(updateUserPasswordSchema), updatePassword);
 
 export { router as userRoutes };
