@@ -31,6 +31,7 @@ export const ERROR_MESSAGES = {
   INVALID_EMAIL_PASSWORD: "Invalid Email, Phone or password.",
   INCORRECT_EMAIL_PASSWORD: "Incorrect Email or password.",
   REQUIRED_EMAIL_PASSWORD: "Email and Password is Required",
+  PASSWORDS_DO_NOT_MATCH: "Password do not match.",
 
   USER_NOT_FOUND: "User not found.",
   USER_NOT_FOUND_INVALID_TOKEN: "User not found or invalid token.",
@@ -57,5 +58,5 @@ export const SUCCESS_MESSAGES = {
   ADMIN_LOGGED_OUT: "Admin logged out successfully.",
   ADMIN_UPDATED: "Admin updated successfully.",
 
-  PASSWORD_CHANGED: "Password changed successfully.",
+  PASSWORD_UPDATED: "Password updated successfully.",
 };
